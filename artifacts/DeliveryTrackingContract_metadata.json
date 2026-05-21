@@ -1,0 +1,215 @@
+{
+	"compiler": {
+		"version": "0.8.30+commit.73712a01"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "trackingId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "orderId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "deliveryProvider",
+						"type": "address"
+					}
+				],
+				"name": "TrackingCreated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "trackingId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "enum DeliveryTrackingContract.DeliveryStatus",
+						"name": "status",
+						"type": "uint8"
+					}
+				],
+				"name": "TrackingStatusUpdated",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_orderId",
+						"type": "uint256"
+					}
+				],
+				"name": "createTracking",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_trackingId",
+						"type": "uint256"
+					}
+				],
+				"name": "getTrackingDetails",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "orderId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "deliveryProvider",
+						"type": "address"
+					},
+					{
+						"internalType": "enum DeliveryTrackingContract.DeliveryStatus",
+						"name": "status",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "trackingCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "trackings",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "trackingId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "orderId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "deliveryProvider",
+						"type": "address"
+					},
+					{
+						"internalType": "enum DeliveryTrackingContract.DeliveryStatus",
+						"name": "status",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_trackingId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "enum DeliveryTrackingContract.DeliveryStatus",
+						"name": "_status",
+						"type": "uint8"
+					}
+				],
+				"name": "updateTrackingStatus",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/DeliveryTrackingContract.sol": "DeliveryTrackingContract"
+		},
+		"evmVersion": "prague",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/DeliveryTrackingContract.sol": {
+			"keccak256": "0x77ebdbb1022d4d4d54c03d8c229c3a1648d9c5ff538f6c89b211f9f2550c0d79",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://738976499d5ed087f266673fcc22af3adef07019a90447ea7e72821ce0759cca",
+				"dweb:/ipfs/QmPi7Sv2gXWCUUa4KcuDkMJwxuBnm4Cqbss6g6QpHo1AB9"
+			]
+		}
+	},
+	"version": 1
+}
