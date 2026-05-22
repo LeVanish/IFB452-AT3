@@ -62,7 +62,18 @@ contract EscrowContract {
 
     // Customer confirms they received the delivery and Completed and releases funds to the retailer
     function confirmDelivery(uint256 _orderId) public {
+        (
+            ,
+            ,
+            ,
+            ,
+            ,
+            ,
+            OrderContract.OrderStatus status
+        ) = orderContract.getOrderDetails(_orderId);
+
         Escrow storage e = escrows[_orderId];
+        require(status == OrderContract.OrderStatus.Delivered, "Delivery is not completed yet");
         require(e.status == EscrowStatus.Deposited, "No deposited funds");
         require(msg.sender == e.customer, "Only the customer can confirm delivery");
 
