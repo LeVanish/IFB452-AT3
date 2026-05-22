@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
+// TODO
+// Add getOrderStatus
 contract OrderContract {
     address public owner;
     // set after escrow is deployed
@@ -18,6 +20,8 @@ contract OrderContract {
         string productName;
         uint256 quantity;
         uint256 price;
+        uint256 createdAt;
+        uint256 deliveredAt;
         OrderStatus status;
         // TODO: add createdAt later for auto payment release
     }
@@ -69,6 +73,8 @@ contract OrderContract {
             _productName,
             _quantity,
             _price,
+            block.timestamp,
+            0,
             OrderStatus.Created
         );
         emit OrderCreated(orderCount, _customer, msg.sender, _supplier, _quantity, _price);
@@ -113,11 +119,16 @@ contract OrderContract {
             string memory productName,
             uint256 quantity,
             uint256 price,
+            uint256 createdAt,
             OrderStatus status
         )
     {
         require(_orderId > 0 && _orderId <= orderCount, "Invalid order ID");
         Order storage o = orders[_orderId];
-        return (o.customer, o.retailer, o.supplier, o.productName, o.quantity, o.price, o.status);
+        return (o.customer, o.retailer, o.supplier, o.productName, o.quantity, o.price, o.createdAt, o.status);
+    }
+
+    function getOrderStatus(uint256 _orderId) public view returns (OrderStatus){
+        return orders[_orderId].status;
     }
 }
