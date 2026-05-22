@@ -14,7 +14,12 @@ contract DeliveryContract {
         orderContract = OrderContract(_orderContract);
     }
 
-    function updateDeliveryStatus(uint256 _orderId, OrderContract.OrderStatus _status) public {
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only the owner can do this");
+        _;
+    }
+
+    function updateDeliveryStatus(uint256 _orderId, OrderContract.OrderStatus _status) public onlyOwner {
         require(
             _status == OrderContract.OrderStatus.InTransit ||
             _status == OrderContract.OrderStatus.Delivered,

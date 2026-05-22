@@ -6,7 +6,13 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_orderContract",
+						"type": "address"
+					}
+				],
 				"stateMutability": "nonpayable",
 				"type": "constructor"
 			},
@@ -16,13 +22,44 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "trackingId",
+						"name": "orderId",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
+						"name": "createdTimestamp",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "deliveryProvider",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "deliveredTimestamp",
+						"type": "uint256"
+					}
+				],
+				"name": "DeliveryCompleted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
 						"name": "orderId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "createdTimestamp",
 						"type": "uint256"
 					},
 					{
@@ -41,12 +78,12 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "trackingId",
+						"name": "orderId",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
-						"internalType": "enum DeliveryTrackingContract.DeliveryStatus",
+						"internalType": "enum DeliveryTrackingContract.TrackingStatus",
 						"name": "status",
 						"type": "uint8"
 					}
@@ -68,29 +105,13 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_trackingId",
-						"type": "uint256"
-					}
-				],
-				"name": "getTrackingDetails",
+				"inputs": [],
+				"name": "orderContract",
 				"outputs": [
 					{
-						"internalType": "uint256",
-						"name": "orderId",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "deliveryProvider",
+						"internalType": "contract OrderContract",
+						"name": "",
 						"type": "address"
-					},
-					{
-						"internalType": "enum DeliveryTrackingContract.DeliveryStatus",
-						"name": "status",
-						"type": "uint8"
 					}
 				],
 				"stateMutability": "view",
@@ -110,19 +131,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "trackingCount",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -134,12 +142,12 @@
 				"outputs": [
 					{
 						"internalType": "uint256",
-						"name": "trackingId",
+						"name": "orderId",
 						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
-						"name": "orderId",
+						"name": "createdTimestamp",
 						"type": "uint256"
 					},
 					{
@@ -148,7 +156,12 @@
 						"type": "address"
 					},
 					{
-						"internalType": "enum DeliveryTrackingContract.DeliveryStatus",
+						"internalType": "uint256",
+						"name": "deliveredTimestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "enum DeliveryTrackingContract.TrackingStatus",
 						"name": "status",
 						"type": "uint8"
 					}
@@ -160,11 +173,11 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_trackingId",
+						"name": "_orderId",
 						"type": "uint256"
 					},
 					{
-						"internalType": "enum DeliveryTrackingContract.DeliveryStatus",
+						"internalType": "enum DeliveryTrackingContract.TrackingStatus",
 						"name": "_status",
 						"type": "uint8"
 					}
@@ -188,7 +201,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/DeliveryTrackingContract.sol": "DeliveryTrackingContract"
+			"contracts/delivery.sol": "DeliveryTrackingContract"
 		},
 		"evmVersion": "prague",
 		"libraries": {},
@@ -202,12 +215,20 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/DeliveryTrackingContract.sol": {
-			"keccak256": "0x77ebdbb1022d4d4d54c03d8c229c3a1648d9c5ff538f6c89b211f9f2550c0d79",
+		"contracts/Order.sol": {
+			"keccak256": "0x7e0db227609617a158c9dd3749fa00d716b61579604f04bb491f2e2c12310d10",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://738976499d5ed087f266673fcc22af3adef07019a90447ea7e72821ce0759cca",
-				"dweb:/ipfs/QmPi7Sv2gXWCUUa4KcuDkMJwxuBnm4Cqbss6g6QpHo1AB9"
+				"bzz-raw://b58cbc66b9e20d8e41974230c10ddaf649fba2299a1f51e1e78d636297c6234c",
+				"dweb:/ipfs/QmUPta5QCxSZ3im1JkJnQeTbq58CSsAuAec7RyA8qPBewJ"
+			]
+		},
+		"contracts/delivery.sol": {
+			"keccak256": "0xf5bc130aa3106a91de9fb6125dad7077b651dc1b327e56ec82c7472cc941a12b",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://9a88ede25dd9972e0372f417d98e0bd283cdf75060afc700bccaf8f1a064cd9e",
+				"dweb:/ipfs/QmbL8eJsdMUZQP2Qb81eZtACX23HQWNfmqkJCDuN2GK2ue"
 			]
 		}
 	},
