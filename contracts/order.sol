@@ -54,6 +54,12 @@ contract OrderContract {
         uint256 _quantity,
         uint256 _price
     ) public onlyOwner {
+        require(
+            _customer != address(0) &&
+            _supplier != address(0),
+            "All adresses should be valid"
+        );
+
         orderCount++;
         orders[orderCount] = Order(
             orderCount,
