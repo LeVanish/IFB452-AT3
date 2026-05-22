@@ -3,7 +3,7 @@ pragma solidity ^0.8.20;
 
 contract OrderContract {
     address public owner;
-    // set after eescrow is deployed
+    // set after escrow is deployed
     address public escrowContract;
     // set after delivery is deployed
     address public deliveryContract;
@@ -19,7 +19,7 @@ contract OrderContract {
         uint256 quantity;
         uint256 price;
         OrderStatus status;
-        // TODO: add createdat later for auto payment release
+        // TODO: add createdAt later for auto payment release
     }
 
     mapping(uint256 => Order) public orders;
@@ -33,7 +33,7 @@ contract OrderContract {
         owner = msg.sender;
     }
 
-    // only the deployer can do this .deployer is the retailerr
+    // Only the deployer can do this. Deployer is the retailer
     modifier onlyOwner() {
         require(msg.sender == owner, "Only the owner can do this");
         _;

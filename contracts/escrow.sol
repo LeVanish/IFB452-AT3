@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 import "./Order.sol";
-// customer deposits payment into escrow pulls customer/retailer/price from the order, locks the funds  and deposits when customer put dleovery as completed
+// Customer deposits payment into escrow, pulls customer/retailer/price from the order, locks the funds and deposits when customer put dleovery as completed
 contract EscrowContract {
     address public owner;
     OrderContract public orderContract;   
@@ -60,7 +60,7 @@ contract EscrowContract {
         emit PaymentDeposited(_orderId, customer, msg.value);
     }
 
-    // customer conforms they received the delivery nd Completed and releases funds to the retailer
+    // Customer confirms they received the delivery and Completed and releases funds to the retailer
     function confirmDelivery(uint256 _orderId) public {
         Escrow storage e = escrows[_orderId];
         require(e.status == EscrowStatus.Deposited, "No deposited funds");
