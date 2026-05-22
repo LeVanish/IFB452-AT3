@@ -40,6 +40,12 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
+						"name": "quantity",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
 						"name": "price",
 						"type": "uint256"
 					}
@@ -61,6 +67,12 @@
 						"internalType": "string",
 						"name": "productName",
 						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "quantity",
+						"type": "uint256"
 					},
 					{
 						"indexed": false,
@@ -109,9 +121,9 @@
 						"type": "string"
 					},
 					{
-						"internalType": "string",
-						"name": "_productDescription",
-						"type": "string"
+						"internalType": "uint256",
+						"name": "_quantity",
+						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
@@ -122,6 +134,19 @@
 				"name": "createOrder",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "deliveryContract",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -168,9 +193,9 @@
 						"type": "string"
 					},
 					{
-						"internalType": "string",
-						"name": "productDescription",
-						"type": "string"
+						"internalType": "uint256",
+						"name": "quantity",
+						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
@@ -235,9 +260,9 @@
 						"type": "string"
 					},
 					{
-						"internalType": "string",
-						"name": "productDescription",
-						"type": "string"
+						"internalType": "uint256",
+						"name": "quantity",
+						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
@@ -270,6 +295,19 @@
 				"inputs": [
 					{
 						"internalType": "address",
+						"name": "_deliveryContract",
+						"type": "address"
+					}
+				],
+				"name": "setDeliveryContract",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
 						"name": "_escrowContract",
 						"type": "address"
 					}
@@ -292,9 +330,9 @@
 						"type": "string"
 					},
 					{
-						"internalType": "string",
-						"name": "_productDescription",
-						"type": "string"
+						"internalType": "uint256",
+						"name": "_quantity",
+						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
@@ -354,11 +392,11 @@
 	},
 	"sources": {
 		"contracts/order.sol": {
-			"keccak256": "0x392986bdeb1c610edeb68b1d08f23d382d10326b2d60538c57cc8b39d62165f0",
+			"keccak256": "0x7e0db227609617a158c9dd3749fa00d716b61579604f04bb491f2e2c12310d10",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://3c094a3fe6b7cd8ab476ed52bb0642b17ca88b89a9c91aabe063b3a62c8d7507",
-				"dweb:/ipfs/QmWeVueSP3uBg7DQ3jY4btDRATtjyT6NBSMzbJAQWa7FA6"
+				"bzz-raw://b58cbc66b9e20d8e41974230c10ddaf649fba2299a1f51e1e78d636297c6234c",
+				"dweb:/ipfs/QmUPta5QCxSZ3im1JkJnQeTbq58CSsAuAec7RyA8qPBewJ"
 			]
 		}
 	},

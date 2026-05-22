@@ -6,7 +6,7 @@ import "./Order.sol";
 contract EscrowContract {
     address public owner;
     OrderContract public orderContract;   
-
+//TODO: add arbiter logic is time allows
     enum EscrowStatus {
         None,
         Deposited,

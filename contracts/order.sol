@@ -3,8 +3,10 @@ pragma solidity ^0.8.20;
 
 contract OrderContract {
     address public owner;
-    // set after Escrow is deployed
+    // set after eescrow is deployed
     address public escrowContract;
+    // set after delivery is deployed
+    address public deliveryContract;
 
     enum OrderStatus { Created, Paid, Shipped, InTransit, Delivered, Completed }
 
@@ -14,42 +16,44 @@ contract OrderContract {
         address retailer;
         address supplier;
         string productName;
-        string productDescription;
+        uint256 quantity;
         uint256 price;
         OrderStatus status;
-        // TODO: add createdat later for auto payment relese 
+        // TODO: add createdat later for auto payment release
     }
 
     mapping(uint256 => Order) public orders;
     uint256 public orderCount;
 
-    event OrderCreated(uint256 orderId, address customer, address retailer, address supplier, uint256 price);
-    event OrderDetailsUpdated(uint256 orderId, string productName, uint256 price);
+    event OrderCreated(uint256 orderId, address customer, address retailer, address supplier, uint256 quantity, uint256 price);
+    event OrderDetailsUpdated(uint256 orderId, string productName, uint256 quantity, uint256 price);
     event OrderStatusUpdated(uint256 orderId, OrderStatus status);
 
     constructor() {
         owner = msg.sender;
     }
 
-    // only the retailer who created this order
-    modifier onlyRetailer(uint256 _orderId) {
-        require(msg.sender == orders[_orderId].retailer, "Only the retailer can do this");
+    // only the deployer can do this .deployer is the retailerr
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only the owner can do this");
         _;
     }
 
-    
-    function setEscrowContract(address _escrowContract) public {
-        require(msg.sender == owner, "Only owner");
+    function setEscrowContract(address _escrowContract) public onlyOwner {
         escrowContract = _escrowContract;
+    }
+
+    function setDeliveryContract(address _deliveryContract) public onlyOwner {
+        deliveryContract = _deliveryContract;
     }
 
     function createOrder(
         address _customer,
         address _supplier,
         string memory _productName,
-        string memory _productDescription,
+        uint256 _quantity,
         uint256 _price
-    ) public {
+    ) public onlyOwner {
         orderCount++;
         orders[orderCount] = Order(
             orderCount,
@@ -57,36 +61,36 @@ contract OrderContract {
             msg.sender,
             _supplier,
             _productName,
-            _productDescription,
+            _quantity,
             _price,
             OrderStatus.Created
         );
-        emit OrderCreated(orderCount, _customer, msg.sender, _supplier, _price);
+        emit OrderCreated(orderCount, _customer, msg.sender, _supplier, _quantity, _price);
     }
 
     function updateOrderDetails(
         uint256 _orderId,
         string memory _productName,
-        string memory _productDescription,
+        uint256 _quantity,
         uint256 _price
-    ) public onlyRetailer(_orderId) {
+    ) public onlyOwner {
         require(_orderId > 0 && _orderId <= orderCount, "Invalid order ID");
         Order storage o = orders[_orderId];
         o.productName = _productName;
-        o.productDescription = _productDescription;
+        o.quantity = _quantity;
         o.price = _price;
-        emit OrderDetailsUpdated(_orderId, _productName, _price);
+        emit OrderDetailsUpdated(_orderId, _productName, _quantity, _price);
     }
 
-
+    //update status
     function updateOrderStatus(uint256 _orderId, OrderStatus _status) public {
         require(_orderId > 0 && _orderId <= orderCount, "Invalid order ID");
         Order storage o = orders[_orderId];
         require(
-            msg.sender == o.customer ||
-            msg.sender == o.retailer ||
+            msg.sender == owner ||
             msg.sender == o.supplier ||
-            msg.sender == escrowContract,
+            msg.sender == escrowContract ||
+            msg.sender == deliveryContract,
             "Not authorised"
         );
         o.status = _status;
@@ -101,13 +105,13 @@ contract OrderContract {
             address retailer,
             address supplier,
             string memory productName,
-            string memory productDescription,
+            uint256 quantity,
             uint256 price,
             OrderStatus status
         )
     {
         require(_orderId > 0 && _orderId <= orderCount, "Invalid order ID");
         Order storage o = orders[_orderId];
-        return (o.customer, o.retailer, o.supplier, o.productName, o.productDescription, o.price, o.status);
+        return (o.customer, o.retailer, o.supplier, o.productName, o.quantity, o.price, o.status);
     }
 }
