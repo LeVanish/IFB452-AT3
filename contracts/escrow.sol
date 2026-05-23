@@ -15,7 +15,7 @@ contract EscrowContract {
 
     struct Escrow {
         uint256 orderId;
-        address customer;
+        address payable customer;
         address payable retailer;
         uint256 amount;
         bool deliveryConfirmed;
@@ -52,7 +52,7 @@ contract EscrowContract {
 
         escrows[_orderId] = Escrow(
             _orderId,
-            customer,
+            payable(customer),
             payable(retailer),
             msg.value,
             false,
@@ -117,6 +117,21 @@ contract EscrowContract {
         emit FundsReleased(_orderId, e.retailer, amount);
     }
     
+    function refund(uint256 _orderId) public {
+        Escrow storage e = escrows[_orderId];
+        require(e.status == EscrowStatus.Deposited, "No deposited funds");
+
+        // TODO: add refund confitions (order delivery time exceeded)
+        uint256 amount = e.amount;
+
+        e.amount = 0;
+        e.status = EscrowStatus.Released;
+        orderContract.updateOrderStatus(_orderId, OrderContract.OrderStatus.Completed);
+
+
+        (bool success, ) = e.customer.call{value: amount}("");
+        require(success, "Transfer failed");
+    }
 
     function getEscrowDetails(uint256 _orderId)
         public
