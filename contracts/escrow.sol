@@ -79,15 +79,31 @@ contract EscrowContract {
     }
 
     function releaseFunds(uint256 _orderId) public {
+        (
+            ,
+            ,
+            ,
+            ,
+            ,
+            ,
+            ,
+            uint256 deliveredAt,
+            
+        ) = orderContract.getOrderDetails(_orderId);
+        
         Escrow storage e = escrows[_orderId];
 
-        // require(msg.sender == e.customer || msg.sender == e.retailer, "Only the stakeholder can release funds");
         require(e.status == EscrowStatus.Deposited, "No deposited funds");
         require(orderContract.getOrderStatus(_orderId) == OrderContract.OrderStatus.Delivered, "Delivery is not completed yet");
 
         bool confirmed = e.deliveryConfirmed;
 
-        require(confirmed, "Delivery has not been confirmed");
+        // The funds are released if either delivery is confirmed, or customer does not confirm delivery in 3 days
+        require(
+            confirmed ||
+            block.timestamp >= deliveredAt + 3 days, 
+            "Funds release conditions has not been met"
+        );
 
         uint256 amount = e.amount;
 
