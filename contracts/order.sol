@@ -10,7 +10,14 @@ contract OrderContract {
     // set after delivery is deployed
     address public deliveryContract;
 
-    enum OrderStatus { Created, Paid, Shipped, InTransit, Delivered, Completed }
+    enum OrderStatus { 
+        Created, 
+        Paid, 
+        Shipped, 
+        InTransit, 
+        Delivered, 
+        Completed 
+    }
 
     struct Order {
         uint256 orderId;
@@ -129,6 +136,7 @@ contract OrderContract {
     }
 
     function getOrderStatus(uint256 _orderId) public view returns (OrderStatus){
+        require(_orderId > 0 && _orderId <= orderCount, "Invalid order ID");
         return orders[_orderId].status;
     }
 }

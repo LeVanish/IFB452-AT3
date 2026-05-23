@@ -18,12 +18,14 @@ contract EscrowContract {
         address customer;
         address payable retailer;
         uint256 amount;
+        bool deliveryConfirmed;
         EscrowStatus status;
     }
 
     mapping(uint256 => Escrow) public escrows;
 
     event PaymentDeposited(uint256 orderId, address customer, uint256 amount);
+    event DeliveryConfirmed(uint256 orderId, bool DeliveryConfirmed);
     event FundsReleased(uint256 orderId, address retailer, uint256 amount);
 
     constructor(address _orderContract) {
@@ -39,18 +41,20 @@ contract EscrowContract {
             ,
             ,
             uint256 price,
+            ,
             
         ) = orderContract.getOrderDetails(_orderId);
 
         require(msg.sender == customer, "Only the customer can deposit");
-        require(msg.value == price, "Incorrect payment amount");
         require(escrows[_orderId].status == EscrowStatus.None, "Payment already deposited");
+        require(msg.value == price, "Incorrect payment amount");
 
         escrows[_orderId] = Escrow(
             _orderId,
             customer,
             payable(retailer),
             msg.value,
+            false,
             EscrowStatus.Deposited
         );
 
@@ -62,26 +66,32 @@ contract EscrowContract {
 
     // Customer confirms they received the delivery and Completed and releases funds to the retailer
     function confirmDelivery(uint256 _orderId) public {
-        (
-            ,
-            ,
-            ,
-            ,
-            ,
-            ,
-            OrderContract.OrderStatus status
-        ) = orderContract.getOrderDetails(_orderId);
 
         Escrow storage e = escrows[_orderId];
-        require(status == OrderContract.OrderStatus.Delivered, "Delivery is not completed yet");
+        require(orderContract.getOrderStatus(_orderId) == OrderContract.OrderStatus.Delivered, "Delivery is not completed yet");
         require(e.status == EscrowStatus.Deposited, "No deposited funds");
         require(msg.sender == e.customer, "Only the customer can confirm delivery");
 
+        e.deliveryConfirmed = true;
+
+        emit DeliveryConfirmed(_orderId, e.deliveryConfirmed);
+    }
+
+    function releaseFunds(uint256 _orderId) public {
+        Escrow storage e = escrows[_orderId];
+
+        // require(msg.sender == e.customer || msg.sender == e.retailer, "Only the stakeholder can release funds");
+        require(e.status == EscrowStatus.Deposited, "No deposited funds");
+        require(orderContract.getOrderStatus(_orderId) == OrderContract.OrderStatus.Delivered, "Delivery is not completed yet");
+
+        bool confirmed = e.deliveryConfirmed;
+
+        require(confirmed, "Delivery has not been confirmed");
+
         uint256 amount = e.amount;
+
         e.amount = 0;
         e.status = EscrowStatus.Released;
-
-        
         orderContract.updateOrderStatus(_orderId, OrderContract.OrderStatus.Completed);
 
         (bool success, ) = e.retailer.call{value: amount}("");
@@ -89,6 +99,7 @@ contract EscrowContract {
 
         emit FundsReleased(_orderId, e.retailer, amount);
     }
+    
 
     function getEscrowDetails(uint256 _orderId)
         public
