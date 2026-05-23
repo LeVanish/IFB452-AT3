@@ -112,6 +112,9 @@ contract OrderContract {
             msg.sender == deliveryContract,
             "Not authorised"
         );
+        if (_status == OrderStatus.Delivered){
+            o.deliveredAt = block.timestamp;
+        }
         o.status = _status;
         emit OrderStatusUpdated(_orderId, _status);
     }
@@ -127,12 +130,13 @@ contract OrderContract {
             uint256 quantity,
             uint256 price,
             uint256 createdAt,
+            uint256 deliveredAt,
             OrderStatus status
         )
     {
         require(_orderId > 0 && _orderId <= orderCount, "Invalid order ID");
         Order storage o = orders[_orderId];
-        return (o.customer, o.retailer, o.supplier, o.productName, o.quantity, o.price, o.createdAt, o.status);
+        return (o.customer, o.retailer, o.supplier, o.productName, o.quantity, o.price, o.createdAt, o.deliveredAt, o.status);
     }
 
     function getOrderStatus(uint256 _orderId) public view returns (OrderStatus){

@@ -42,6 +42,7 @@ contract EscrowContract {
             ,
             uint256 price,
             ,
+            ,
             
         ) = orderContract.getOrderDetails(_orderId);
 
