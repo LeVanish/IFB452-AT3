@@ -118,10 +118,29 @@ contract EscrowContract {
     }
     
     function refund(uint256 _orderId) public {
+        (
+            ,
+            ,
+            ,
+            ,
+            ,
+            ,
+            uint256 createdAt,
+            ,
+            OrderContract.OrderStatus status
+        ) = orderContract.getOrderDetails(_orderId);
+
         Escrow storage e = escrows[_orderId];
         require(e.status == EscrowStatus.Deposited, "No deposited funds");
 
-        // TODO: add refund confitions (order delivery time exceeded)
+        bool expired = block.timestamp >= createdAt + 45 days;
+        
+        require(
+            expired ||
+            status == OrderContract.OrderStatus.Failed, 
+            "Refund conditions are not met"
+        );
+
         uint256 amount = e.amount;
 
         e.amount = 0;

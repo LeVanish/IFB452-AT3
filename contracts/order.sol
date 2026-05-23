@@ -16,7 +16,8 @@ contract OrderContract {
         Shipped, 
         InTransit, 
         Delivered, 
-        Completed 
+        Completed,
+        Failed
     }
 
     struct Order {
