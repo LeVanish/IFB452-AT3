@@ -111,13 +111,21 @@ contract OrderContract {
 
     // Assigns delivery provider to an order
     function setDeliveryProvider(uint256 _orderId, address _deliveryProvider) public {
+        
+        // Retrieve order data
         Order storage o = orders[_orderId];
+
+        // Validate sender and provided address
         require(
             msg.sender == o.retailer ||
             msg.sender == o.supplier,
             "Not authorised to set delivery provider"
         );
-
+        require(
+            o.status == OrderStatus.Created ||
+            o.status == OrderStatus.Paid,
+            "Delivery already commenced"
+        );
         require(_deliveryProvider != address(0), "Provided address should be valid");
 
         o.deliveryProvider = _deliveryProvider;
@@ -173,10 +181,15 @@ contract OrderContract {
         uint256 _quantity,
         uint256 _price
     ) public {
+        // Retrieve order data
         Order storage o = orders[_orderId];
-        require(_orderId > 0 && _orderId <= orderCount, "Invalid order ID");
-        require(o.retailer == msg.sender, "Unathorised sender");
 
+        // Verify aender, if order exists, and if money has been deposited
+        require(o.retailer == msg.sender, "Unathorised sender");
+        require(_orderId > 0 && _orderId <= orderCount, "Invalid order ID");
+        require(o.status == OrderStatus.Created, "Order has already been paid");
+
+        // Update order details
         o.productName = _productName;
         o.quantity = _quantity;
         o.price = _price;
@@ -185,8 +198,10 @@ contract OrderContract {
 
     // Updates order status. Used by retailer, supplier, and other contracts
     function updateOrderStatus(uint256 _orderId, OrderStatus _status) public {
-        require(_orderId > 0 && _orderId <= orderCount, "Invalid order ID");
+        // Retrieve order data
         Order storage o = orders[_orderId];
+
+        // Verify sender and if order exists
         require(
             msg.sender == o.retailer ||
             msg.sender == o.supplier ||
@@ -194,6 +209,7 @@ contract OrderContract {
             msg.sender == deliveryContract,
             "Not authorised"
         );
+        require(_orderId > 0 && _orderId <= orderCount, "Invalid order ID");
 
         // If order status is changed to delivered, record timestamp in deliveredAt
         if (_status == OrderStatus.Delivered){
