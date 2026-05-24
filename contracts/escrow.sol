@@ -65,7 +65,7 @@ contract EscrowContract {
         emit PaymentDeposited(_orderId, customer, msg.value);
     }
 
-    // Customer confirms they received the delivery and Completed and releases funds to the retailer
+    // Customer confirms they received the delivery
     function confirmDelivery(uint256 _orderId) public {
 
         Escrow storage e = escrows[_orderId];
@@ -145,7 +145,7 @@ contract EscrowContract {
 
         e.amount = 0;
         e.status = EscrowStatus.Released;
-        orderContract.updateOrderStatus(_orderId, OrderContract.OrderStatus.Completed);
+        orderContract.updateOrderStatus(_orderId, OrderContract.OrderStatus.Refunded);
 
 
         (bool success, ) = e.customer.call{value: amount}("");
