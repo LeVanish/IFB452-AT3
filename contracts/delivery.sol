@@ -3,8 +3,19 @@ pragma solidity ^0.8.20;
 
 import "./Order.sol";
 
+/*
+    Delivery Contract:
+
+    - Allows delivery provider to update order status
+    - Only certain statuses can be updated or assigned
+*/
+
 contract DeliveryContract {
+
+    // Owner
     address public owner;
+
+    // Used to link Delivery contract to Order contract
     OrderContract public orderContract;
 
     event DeliveryStatusUpdated(uint256 orderId, address deliveryProvider, OrderContract.OrderStatus status);
@@ -19,11 +30,13 @@ contract DeliveryContract {
         _;
     }
 
+    // Lets assigned delivery provider to set order status
     function updateDeliveryStatus(uint256 _orderId, OrderContract.OrderStatus _status) public {
         // Only delivery provider for this order may perform the action
         ( , , , address deliveryProvider, , , , , , ) = orderContract.getOrderDetails(_orderId);
         require(msg.sender == deliveryProvider, "Only the delivery provider can do this");
-        // Only certain statuses can be used to update order status
+
+        // Only certain statuses can be used to update current status
         require(
             _status == OrderContract.OrderStatus.Shipped ||
             _status == OrderContract.OrderStatus.InTransit ||
