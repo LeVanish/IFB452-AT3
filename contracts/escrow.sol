@@ -8,7 +8,7 @@ import "./Order.sol";
     Escrow Contract:
 
     - Securely stores customer's funds
-    - Allows customer to confirm relivery of the product
+    - Allows customer to confirm delivery of the product
     - Releases funds when delivery is confirmed or if order has been delivered for 3 days
     - Refunds to customer if order is failed or takes too long to be delivered
 */
@@ -48,7 +48,7 @@ contract EscrowContract {
 
     // Events for blockchain logs
     event PaymentDeposited(uint256 orderId, address customer, uint256 amount);
-    event DeliveryConfirmed(uint256 orderId, bool DeliveryConfirmed);
+    event DeliveryConfirmed(uint256 orderId, bool deliveryConfirmed);
     event FundsReleased(uint256 orderId, address retailer, uint256 amount);
     event Refunded(uint256 orderId, address customer, uint256 amount);
 
@@ -80,7 +80,7 @@ contract EscrowContract {
         );
 
         // Update escrow status to Paid
-        orderContract.updateOrderStatus(_orderId, OrderContract.OrderStatus.Paid);
+        orderContract.markAsPaid(_orderId);
 
         emit PaymentDeposited(_orderId, customer, msg.value);
     }
@@ -103,7 +103,7 @@ contract EscrowContract {
         emit DeliveryConfirmed(_orderId, e.deliveryConfirmed);
     }
 
-    // Used to release funds if conditions are met
+    // Used to release funds if conditions are met. Anyone can call it by design
     function releaseFunds(uint256 _orderId) public {
         // Retrieve relevant order data
         ( , , , , , , , , uint256 deliveredAt, ) = orderContract.getOrderDetails(_orderId);
@@ -129,7 +129,7 @@ contract EscrowContract {
         uint256 amount = e.amount;
         e.amount = 0;
         e.status = EscrowStatus.Released;
-        orderContract.updateOrderStatus(_orderId, OrderContract.OrderStatus.Completed);
+        orderContract.markAsCompleted(_orderId);
 
         // Release the funds to the retailer
         (bool success, ) = e.retailer.call{value: amount}("");
@@ -138,7 +138,7 @@ contract EscrowContract {
         emit FundsReleased(_orderId, e.retailer, amount);
     }
     
-    // Used to refund the deposit to the customer if conditions are met
+    // Used to refund the deposit to the customer if conditions are met. Anyone can call it by design
     function refund(uint256 _orderId) public {
         
         // Retrieve relevant order data
@@ -162,7 +162,7 @@ contract EscrowContract {
         uint256 amount = e.amount;
         e.amount = 0;
         e.status = EscrowStatus.Released;
-        orderContract.updateOrderStatus(_orderId, OrderContract.OrderStatus.Refunded);
+        orderContract.markAsRefunded(_orderId);
 
         // Release the funds to the customer
         (bool success, ) = e.customer.call{value: amount}("");
@@ -186,7 +186,7 @@ contract EscrowContract {
         return (e.customer, e.retailer, e.amount, e.status);
     }
 
-    // Used to recieve escrow balance
+    // Used to receive escrow balance
     function getContractBalance() public view returns (uint256) {
         return address(this).balance;
     }
