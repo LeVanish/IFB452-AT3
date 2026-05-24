@@ -5,6 +5,7 @@ pragma solidity ^0.8.20;
 // Change getOrderDetails so it returns whole tuple. In remix it is displayed poely, but it can still be displayed properly on front end.
 contract OrderContract {
     address public owner;
+    mapping(address => bool) public retailers;
     // set after escrow is deployed
     address public escrowContract;
     // set after delivery is deployed
@@ -37,25 +38,46 @@ contract OrderContract {
     mapping(uint256 => Order) public orders;
     uint256 public orderCount;
 
+    event RetailerAdded(address retailer);
+    event RetailerRemoved(address retailer);
     event OrderCreated(uint256 orderId, address customer, address retailer, address supplier, uint256 quantity, uint256 price);
     event OrderDetailsUpdated(uint256 orderId, string productName, uint256 quantity, uint256 price);
     event OrderStatusUpdated(uint256 orderId, OrderStatus status);
 
     constructor() {
         owner = msg.sender;
+        retailers[owner] = true;
     }
 
-    // Only the deployer can do this. Deployer is the retailer
     modifier onlyOwner() {
         require(msg.sender == owner, "Only the owner can do this");
         _;
     }
 
-    function setEscrowContract(address _escrowContract) public onlyOwner {
+    modifier onlyRetailer() {
+        require(retailers[msg.sender], "Not authorised retailer");
+        _;
+    }
+
+    function addRetailer(address _retailer) public onlyOwner {
+        require(_retailer != address(0), "Invalid address");
+
+        retailers[_retailer] = true;
+        emit RetailerAdded(_retailer);
+    }
+    
+    function removeRetailer(address _retailer) public onlyOwner {
+        require(_retailer != address(0), "Invalid address");
+
+        retailers[_retailer] = false;
+        emit RetailerRemoved(_retailer);
+    }
+
+    function setEscrowContract(address _escrowContract) public onlyRetailer {
         escrowContract = _escrowContract;
     }
 
-    function setDeliveryContract(address _deliveryContract) public onlyOwner {
+    function setDeliveryContract(address _deliveryContract) public onlyRetailer {
         deliveryContract = _deliveryContract;
     }
 
@@ -65,7 +87,7 @@ contract OrderContract {
         string memory _productName,
         uint256 _quantity,
         uint256 _price
-    ) public onlyOwner {
+    ) public onlyRetailer {
         require(
             _customer != address(0) &&
             _supplier != address(0),
@@ -93,7 +115,7 @@ contract OrderContract {
         string memory _productName,
         uint256 _quantity,
         uint256 _price
-    ) public onlyOwner {
+    ) public onlyRetailer {
         require(_orderId > 0 && _orderId <= orderCount, "Invalid order ID");
         Order storage o = orders[_orderId];
         o.productName = _productName;
@@ -107,7 +129,7 @@ contract OrderContract {
         require(_orderId > 0 && _orderId <= orderCount, "Invalid order ID");
         Order storage o = orders[_orderId];
         require(
-            msg.sender == owner ||
+            msg.sender == o.retailer ||
             msg.sender == o.supplier ||
             msg.sender == escrowContract ||
             msg.sender == deliveryContract,
