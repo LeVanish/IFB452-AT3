@@ -2,7 +2,8 @@
 pragma solidity ^0.8.20;
 
 // TODO
-// Change getOrderDetails so it returns whole tuple. In remix it is displayed poely, but it can still be displayed properly on front end.
+// Change getOrderDetails so it returns whole tuple. In remix it is displayed poely, but it can still be displayed properly on front end
+// Break down status updates in different functions
 contract OrderContract {
     address public owner;
     mapping(address => bool) public retailers;
@@ -87,11 +88,11 @@ contract OrderContract {
         o.deliveryProvider = _deliveryProvider;
     }   
 
-    function setEscrowContract(address _escrowContract) public onlyRetailer {
+    function setEscrowContract(address _escrowContract) public onlyOwner {
         escrowContract = _escrowContract;
     }
 
-    function setDeliveryContract(address _deliveryContract) public onlyRetailer {
+    function setDeliveryContract(address _deliveryContract) public onlyOwner {
         deliveryContract = _deliveryContract;
     }
 
@@ -105,7 +106,7 @@ contract OrderContract {
         require(
             _customer != address(0) &&
             _supplier != address(0),
-            "All adresses should be valid"
+            "All addresses should be valid"
         );
 
         orderCount++;
@@ -130,9 +131,11 @@ contract OrderContract {
         string memory _productName,
         uint256 _quantity,
         uint256 _price
-    ) public onlyRetailer {
-        require(_orderId > 0 && _orderId <= orderCount, "Invalid order ID");
+    ) public {
         Order storage o = orders[_orderId];
+        require(_orderId > 0 && _orderId <= orderCount, "Invalid order ID");
+        require(o.retailer == msg.sender, "Unathorised sender");
+
         o.productName = _productName;
         o.quantity = _quantity;
         o.price = _price;

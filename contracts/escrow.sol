@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
-
 import "./Order.sol";
-// Customer deposits payment into escrow, pulls customer/retailer/price from the order, locks the funds and deposits when customer put dleovery as completed
+
+//TODO: add arbiter logic is time allows
+
+
 contract EscrowContract {
     address public owner;
     OrderContract public orderContract;   
-//TODO: add arbiter logic is time allows
+
     enum EscrowStatus {
         None,
         Deposited,
@@ -82,7 +84,7 @@ contract EscrowContract {
         require(
             confirmed ||
             block.timestamp >= deliveredAt + 3 days, 
-            "Funds release conditions has not been met"
+            "Funds release conditions have not been met"
         );
 
         uint256 amount = e.amount;

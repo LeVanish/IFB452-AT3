@@ -1,0 +1,134 @@
+{
+	"compiler": {
+		"version": "0.8.30+commit.73712a01"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_orderContract",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "orderId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "deliveryProvider",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "enum OrderContract.OrderStatus",
+						"name": "status",
+						"type": "uint8"
+					}
+				],
+				"name": "DeliveryStatusUpdated",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "orderContract",
+				"outputs": [
+					{
+						"internalType": "contract OrderContract",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_orderId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "enum OrderContract.OrderStatus",
+						"name": "_status",
+						"type": "uint8"
+					}
+				],
+				"name": "updateDeliveryStatus",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/delivery.sol": "DeliveryContract"
+		},
+		"evmVersion": "prague",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/Order.sol": {
+			"keccak256": "0x16cb74f03786489931a0fba670e4ed1c07019831b605018a1f93631f1fdc02ab",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://927b640d31c7c6c7c0079dac129015c6045a2c9e9dd9939fe76b5ce3b1dadce1",
+				"dweb:/ipfs/QmandeKzrxUfM5VYHMPu5r79JPh27do48NWxwEYjhY4uhq"
+			]
+		},
+		"contracts/delivery.sol": {
+			"keccak256": "0xfcacbe0e4f33a1bd211b014d444d4f4763b46c344318f68d0cae38b105bfeb08",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://c5a8321f9fec68e3d0bcc0eccbebb6126a5a6e274816bf7f1486f7415377e81a",
+				"dweb:/ipfs/QmYHy2tw7UKFKnARfoDjZnJupz4zHM9EPd9gsp7VzfRmXP"
+			]
+		}
+	},
+	"version": 1
+}
