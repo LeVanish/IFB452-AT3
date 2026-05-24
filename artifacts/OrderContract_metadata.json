@@ -203,8 +203,37 @@
 						"type": "uint256"
 					},
 					{
+						"internalType": "uint256",
+						"name": "createdAt",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "deliveredAt",
+						"type": "uint256"
+					},
+					{
 						"internalType": "enum OrderContract.OrderStatus",
 						"name": "status",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_orderId",
+						"type": "uint256"
+					}
+				],
+				"name": "getOrderStatus",
+				"outputs": [
+					{
+						"internalType": "enum OrderContract.OrderStatus",
+						"name": "",
 						"type": "uint8"
 					}
 				],
@@ -267,6 +296,16 @@
 					{
 						"internalType": "uint256",
 						"name": "price",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "createdAt",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "deliveredAt",
 						"type": "uint256"
 					},
 					{
@@ -392,11 +431,11 @@
 	},
 	"sources": {
 		"contracts/order.sol": {
-			"keccak256": "0x7e0db227609617a158c9dd3749fa00d716b61579604f04bb491f2e2c12310d10",
+			"keccak256": "0xfaa3285afda73458c2859dfe251485348fa00a4cc978b18c8878899129d0469f",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://b58cbc66b9e20d8e41974230c10ddaf649fba2299a1f51e1e78d636297c6234c",
-				"dweb:/ipfs/QmUPta5QCxSZ3im1JkJnQeTbq58CSsAuAec7RyA8qPBewJ"
+				"bzz-raw://34f58324926ede9f6e9257e6bb8ed52339b2d87fc9c0a100f52683b5c101c0c8",
+				"dweb:/ipfs/QmWVpkRuWX1FTJZtQTd7ayMBwjRBNXH5rtecZzExS1yjqd"
 			]
 		}
 	},

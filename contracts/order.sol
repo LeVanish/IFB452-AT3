@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 // TODO
-// Add getOrderStatus
+// Change getOrderDetails so it returns whole tuple. In remix it is displayed poely, but it can still be displayed properly on front end.
 contract OrderContract {
     address public owner;
     // set after escrow is deployed
@@ -17,7 +17,8 @@ contract OrderContract {
         InTransit, 
         Delivered, 
         Completed,
-        Failed
+        Failed,
+        Refunded
     }
 
     struct Order {
@@ -31,7 +32,6 @@ contract OrderContract {
         uint256 createdAt;
         uint256 deliveredAt;
         OrderStatus status;
-        // TODO: add createdAt later for auto payment release
     }
 
     mapping(uint256 => Order) public orders;
