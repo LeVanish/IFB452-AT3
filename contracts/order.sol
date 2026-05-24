@@ -27,6 +27,7 @@ contract OrderContract {
         address customer;
         address retailer;
         address supplier;
+        address deliveryProvider;
         string productName;
         uint256 quantity;
         uint256 price;
@@ -55,7 +56,7 @@ contract OrderContract {
     }
 
     modifier onlyRetailer() {
-        require(retailers[msg.sender], "Not authorised retailer");
+        require(retailers[msg.sender], "Only retailer can do this");
         _;
     }
 
@@ -72,6 +73,19 @@ contract OrderContract {
         retailers[_retailer] = false;
         emit RetailerRemoved(_retailer);
     }
+
+    function setDeliveryProvider(uint256 _orderId, address _deliveryProvider) public {
+        Order storage o = orders[_orderId];
+        require(
+            msg.sender == o.retailer ||
+            msg.sender == o.supplier,
+            "Not authorised to set delivery provider"
+        );
+
+        require(_deliveryProvider != address(0), "Provided address should be valid");
+
+        o.deliveryProvider = _deliveryProvider;
+    }   
 
     function setEscrowContract(address _escrowContract) public onlyRetailer {
         escrowContract = _escrowContract;
@@ -100,6 +114,7 @@ contract OrderContract {
             _customer,
             msg.sender,
             _supplier,
+            address(0),
             _productName,
             _quantity,
             _price,
@@ -149,6 +164,7 @@ contract OrderContract {
             address customer,
             address retailer,
             address supplier,
+            address deliveryProvider,
             string memory productName,
             uint256 quantity,
             uint256 price,
@@ -159,7 +175,7 @@ contract OrderContract {
     {
         require(_orderId > 0 && _orderId <= orderCount, "Invalid order ID");
         Order storage o = orders[_orderId];
-        return (o.customer, o.retailer, o.supplier, o.productName, o.quantity, o.price, o.createdAt, o.deliveredAt, o.status);
+        return (o.customer, o.retailer, o.supplier, o.deliveryProvider, o.productName, o.quantity, o.price, o.createdAt, o.deliveredAt, o.status);
     }
 
     function getOrderStatus(uint256 _orderId) public view returns (OrderStatus){

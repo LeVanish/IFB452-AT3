@@ -19,7 +19,10 @@ contract DeliveryContract {
         _;
     }
 
-    function updateDeliveryStatus(uint256 _orderId, OrderContract.OrderStatus _status) public onlyOwner {
+    function updateDeliveryStatus(uint256 _orderId, OrderContract.OrderStatus _status) public {
+        // Only delivery provider for this order may perform the action
+        ( , , , address deliveryProvider, , , , , , ) = orderContract.getOrderDetails(_orderId);
+        require(msg.sender == deliveryProvider, "Only the delivery provider can do this");
         // Only certain statuses can be used to update order status
         require(
             _status == OrderContract.OrderStatus.Shipped ||

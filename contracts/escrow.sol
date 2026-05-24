@@ -34,17 +34,7 @@ contract EscrowContract {
     }
 
     function depositPayment(uint256 _orderId) public payable {
-        (
-            address customer,
-            address retailer,
-            ,
-            ,
-            ,
-            uint256 price,
-            ,
-            ,
-            
-        ) = orderContract.getOrderDetails(_orderId);
+        (address customer, address retailer, , , , , uint256 price, , , ) = orderContract.getOrderDetails(_orderId);
 
         require(msg.sender == customer, "Only the customer can deposit");
         require(escrows[_orderId].status == EscrowStatus.None, "Payment already deposited");
@@ -79,22 +69,12 @@ contract EscrowContract {
     }
 
     function releaseFunds(uint256 _orderId) public {
-        (
-            ,
-            ,
-            ,
-            ,
-            ,
-            ,
-            ,
-            uint256 deliveredAt,
-            
-        ) = orderContract.getOrderDetails(_orderId);
+        ( , , , , , , , , uint256 deliveredAt, ) = orderContract.getOrderDetails(_orderId);
         
         Escrow storage e = escrows[_orderId];
 
         require(e.status == EscrowStatus.Deposited, "No deposited funds");
-        require(orderContract.getOrderStatus(_orderId) == OrderContract.OrderStatus.Delivered, "Delivery is not completed yet");
+        require(orderContract.getOrderStatus(_orderId) == OrderContract.OrderStatus.Delivered, "Delivery is not completed");
 
         bool confirmed = e.deliveryConfirmed;
 
@@ -118,17 +98,7 @@ contract EscrowContract {
     }
     
     function refund(uint256 _orderId) public {
-        (
-            ,
-            ,
-            ,
-            ,
-            ,
-            ,
-            uint256 createdAt,
-            ,
-            OrderContract.OrderStatus status
-        ) = orderContract.getOrderDetails(_orderId);
+        ( , , , , , , , uint256 createdAt, , OrderContract.OrderStatus status) = orderContract.getOrderDetails(_orderId);
 
         Escrow storage e = escrows[_orderId];
         require(e.status == EscrowStatus.Deposited, "No deposited funds");
