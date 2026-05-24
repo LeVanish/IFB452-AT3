@@ -20,10 +20,24 @@ contract DeliveryContract {
     }
 
     function updateDeliveryStatus(uint256 _orderId, OrderContract.OrderStatus _status) public onlyOwner {
+        // Only certain statuses can be used to update order status
         require(
+            _status == OrderContract.OrderStatus.Shipped ||
             _status == OrderContract.OrderStatus.InTransit ||
-            _status == OrderContract.OrderStatus.Delivered,
-            "Delivery can only update InTransit or Delivered conditions only"
+            _status == OrderContract.OrderStatus.Delivered ||
+            _status == OrderContract.OrderStatus.Failed,
+            "Cannot update to provided status"
+        );
+
+        // Only certain statuses can be updated
+        OrderContract.OrderStatus ordStatus = orderContract.getOrderStatus(_orderId);
+        require(
+            ordStatus != OrderContract.OrderStatus.Created &&
+            ordStatus != OrderContract.OrderStatus.Delivered &&
+            ordStatus != OrderContract.OrderStatus.Completed &&
+            ordStatus != OrderContract.OrderStatus.Failed && 
+            ordStatus != OrderContract.OrderStatus.Refunded,
+            "Cannot update current order status"
         );
 
         orderContract.updateOrderStatus(_orderId, _status);
