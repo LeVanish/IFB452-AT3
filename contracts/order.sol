@@ -3,7 +3,6 @@ pragma solidity ^0.8.20;
 
 // TODO
 // Change getOrderDetails so it returns whole tuple. In remix it is displayed poorly, but it can still be displayed properly on front end
-// Break down status updates in different functions
 
 /*
     Order Contract:
@@ -219,6 +218,7 @@ contract OrderContract {
     //     o.status = _status;
     //     emit OrderStatusUpdated(_orderId, _status);
     // }
+
 
     // Following functions are used to update order status. 
     // They had to be broken down to prevent status transition logic from breaking

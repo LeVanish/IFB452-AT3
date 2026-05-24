@@ -18,6 +18,7 @@ contract DeliveryContract {
     // Used to link Delivery contract to Order contract
     OrderContract public orderContract;
 
+    // Event for blockchain logs
     event DeliveryStatusUpdated(uint256 orderId, address deliveryProvider, OrderContract.OrderStatus status);
 
     constructor(address _orderContract) {
@@ -25,11 +26,13 @@ contract DeliveryContract {
         orderContract = OrderContract(_orderContract);
     }
 
+    // Resticts access to owner only
     modifier onlyOwner() {
         require(msg.sender == owner, "Only the owner can do this");
         _;
     }
 
+    // Resticts access to order's delivery provider only
     modifier onlyDeliveryProvider(uint256 _orderId) {
         ( , , , address deliveryProvider, , , , , , ) = orderContract.getOrderDetails(_orderId);
 
