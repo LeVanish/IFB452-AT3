@@ -1,8 +1,8 @@
 # Delivery Escrow dApp
 
-### IFB452 AT3 Blackhain Project
+## IFB452 AT3 Blackhain Project
 
-#### Team 106:
+### Team 106:
 - Ivan Ostapenko (n11421860)
 - Arjun Ramesh Nair (n11530405)
 
