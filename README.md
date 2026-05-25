@@ -11,6 +11,28 @@
 - Release or refund the deposit when certain conditions are fulfilled
 - Store and update order status, including delivery shipment status
 
+##### Application structure
+IFB452-AT3
+├── contracts/
+│   ├── delivery.sol
+│   ├── escrow.sol
+│   └── order.sol
+│
+├── frontend/
+│   ├── abi/
+│   │   ├── deliveryABI.json
+│   │   ├── escrowABI.json
+│   │   └── orderABI.json
+│   │
+│   ├── js/
+│   │   ├── app.js
+│   │   ├── contracts.js
+│   │   └── wallet.js
+│   │
+│   ├── index.html
+│   ├── package-lock.json
+│   └── package.json
+└── README.md
 
 ## Application deployment guide
 Server deployment
