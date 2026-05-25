@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Escrow DApp</title>
+
+    <link rel="stylesheet" href="css/styles.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
+</head>
+
+<body>
+
+    <h1>Escrow Dropshipping DApp</h1>
+
+    <button id="connectButton">
+        Connect Wallet
+    </button>
+
+    <p id="walletAddress">
+        Not Connected
+    </p>
+
+    <hr>
+
+    <h2>Create Order</h2>
+
+    <form id="createOrderForm">
+
+        <input id="customer" placeholder="Customer Address">
+
+        <input id="supplier" placeholder="Supplier Address">
+
+        <input id="productName" placeholder="Product Name">
+
+        <input id="quantity" type="number" placeholder="Quantity">
+
+        <input id="price" type="number" placeholder="Price In Wei">
+
+        <button type="submit">
+            Create Order
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="orders.html">
+        View Orders
+    </a>
+
+    <script type="module" src="js/index.js"></script>
+
+</body>
+
+</html>
