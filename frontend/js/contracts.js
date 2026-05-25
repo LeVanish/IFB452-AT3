@@ -1,34 +1,50 @@
-import { ORDER_ADDRESS, ESCROW_ADDRESS, DELIVERY_ADDRESS } from "./config.js";
+import { ethers } from "https://cdn.jsdelivr.net/npm/ethers@6.13.1/+esm";
 
-import ORDER_ABI from "../abi/OrderABI.json" with { type: "json" };
-import ESCROW_ABI from "../abi/EscrowABI.json" with { type: "json" };
-import DELIVERY_ABI from "../abi/DeliveryABI.json" with { type: "json" };
+import * as wallet from "./wallet.js";
 
-import { signer } from "./wallet.js";
+import ORDER_ABI from "../abi/orderABI.json" with { type: "json" };
+import ESCROW_ABI from "../abi/escrowABI.json" with { type: "json" };
+import DELIVERY_ABI from "../abi/deliveryABI.json" with { type: "json" };
 
-export function getContracts() {
+const ORDER_ADDRESS = "0x0992a45DcAeaC3842a3064616F78CB04148fF88d";
+const ESCROW_ADDRESS = "0xa9543dE838cFA8bE222960FCfeb69D664d81B0f6";
+const DELIVERY_ADDRESS = "0x41d5F310ec376CCA0A0b2E084ad70BeD84FABFD0";
 
-    const orderContract = new ethers.Contract(
+export function getOrderContract() {
+
+    if (!wallet.signer) {
+        throw new Error("Wallet not connected");
+    }
+
+    return new ethers.Contract(
         ORDER_ADDRESS,
         ORDER_ABI,
-        signer
+        wallet.signer
     );
+}
 
-    const escrowContract = new ethers.Contract(
+export function getEscrowContract() {
+
+    if (!wallet.signer) {
+        throw new Error("Wallet not connected");
+    }
+
+    return new ethers.Contract(
         ESCROW_ADDRESS,
         ESCROW_ABI,
-        signer
+        wallet.signer
     );
+}
 
-    const deliveryContract = new ethers.Contract(
+export function getDeliveryContract() {
+
+    if (!wallet.signer) {
+        throw new Error("Wallet not connected");
+    }
+
+    return new ethers.Contract(
         DELIVERY_ADDRESS,
         DELIVERY_ABI,
-        signer
+        wallet.signer
     );
-
-    return {
-        orderContract,
-        escrowContract,
-        deliveryContract
-    };
 }

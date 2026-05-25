@@ -4,6 +4,6 @@ The server runs on node using expess.
 Server start guide:
 1. In terminal, change directory to /frontend
 2. In terminal, enter "npm install"
-3. In terminal, enter "node server.js"
+3. In terminal, enter "npm serve"
 
-The server should be running on "http://localhost:3000"
+The local server should be running on "http://localhost:3000"

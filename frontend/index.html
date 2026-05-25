@@ -2,54 +2,81 @@
 <html>
 
 <head>
-    <title>Escrow DApp</title>
-
-    <link rel="stylesheet" href="css/styles.css">
-
-    <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
+    <title>Escrow Dropshipping dApp</title>
 </head>
 
 <body>
 
-    <h1>Escrow Dropshipping DApp</h1>
+    <h1>Escrow Dropshipping dApp</h1>
 
-    <button id="connectButton">
-        Connect Wallet
-    </button>
+    <div>
+        Wallet:
+        <span id="walletAddress">Not Connected</span>
+    </div>
 
-    <p id="walletAddress">
-        Not Connected
-    </p>
+    <button id="connectBtn">Connect Wallet</button>
 
     <hr>
 
     <h2>Create Order</h2>
 
-    <form id="createOrderForm">
+    <input id="customer" placeholder="Customer Address"><br><br>
+    <input id="supplier" placeholder="Supplier Address"><br><br>
+    <input id="productName" placeholder="Product Name"><br><br>
+    <input id="quantity" type="number" placeholder="Quantity"><br><br>
+    <input id="price" type="number" placeholder="Price in Wei"><br><br>
 
-        <input id="customer" placeholder="Customer Address">
+    <button id="createOrderBtn">Create Order</button>
 
-        <input id="supplier" placeholder="Supplier Address">
+    <hr>
 
-        <input id="productName" placeholder="Product Name">
+    <h2>Assign Delivery Provider</h2>
 
-        <input id="quantity" type="number" placeholder="Quantity">
+    <input id="assignOrderId" placeholder="Order ID"><br><br>
+    <input id="deliveryProvider" placeholder="Delivery Provider Address"><br><br>
 
-        <input id="price" type="number" placeholder="Price In Wei">
+    <button id="assignDeliveryBtn">Assign Delivery Provider</button>
 
-        <button type="submit">
-            Create Order
-        </button>
+    <hr>
 
-    </form>
+    <h2>View Order</h2>
 
-    <br>
+    <input id="viewOrderId" placeholder="Order ID"><br><br>
 
-    <a href="orders.html">
-        View Orders
-    </a>
+    <button id="viewOrderBtn">View Order</button>
 
-    <script type="module" src="js/index.js"></script>
+    <div id="orderDetails"></div>
+
+    <hr>
+
+    <h2>Escrow</h2>
+
+    <input id="depositOrderId" placeholder="Order ID"><br><br>
+
+    <button id="depositBtn">Deposit Payment</button>
+    <button id="confirmDeliveryBtn">Confirm Delivery</button>
+    <button id="releaseFundsBtn">Release Funds</button>
+    <button id="refundBtn">Refund</button>
+
+    <hr>
+
+    <h2>Delivery</h2>
+
+    <input id="deliveryOrderId" placeholder="Order ID"><br><br>
+
+    <button id="shippedBtn">Mark Shipped</button>
+    <button id="transitBtn">Mark In Transit</button>
+    <button id="deliveredBtn">Mark Delivered</button>
+
+    <hr>
+
+    <h2>Fail Order</h2>
+
+    <input id="failOrderId" placeholder="Order ID"><br><br>
+
+    <button id="failOrderBtn">Mark Failed</button>
+
+    <script type="module" src="./js/app.js"></script>
 
 </body>
 
