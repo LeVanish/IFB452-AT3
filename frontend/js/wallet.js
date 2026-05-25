@@ -6,6 +6,7 @@ export let walletAddress;
 
 export async function connectWallet() {
 
+    // Check Metamask availability
     if (!window.ethereum) {
         alert("MetaMask not installed");
         return;
@@ -13,14 +14,17 @@ export async function connectWallet() {
 
     provider = new ethers.BrowserProvider(window.ethereum);
 
+    // Requestaccount
     const accounts = await provider.send("eth_accounts", []);
 
     if (accounts.length === 0) {
         return;
     }
 
+    // Store signer
     signer = await provider.getSigner();
 
+    // Store current account
     walletAddress = await signer.getAddress();
 
     updateWalletDisplay();
@@ -45,6 +49,7 @@ export async function requestWalletConnection() {
     updateWalletDisplay();
 }
 
+// Update account address displayed
 function updateWalletDisplay(text = walletAddress) {
 
     const el =
@@ -55,6 +60,7 @@ function updateWalletDisplay(text = walletAddress) {
     }
 }
 
+// Detect Metamask wallet changes
 window.ethereum.on("accountsChanged", async (accounts) => {
 
     if (accounts.length === 0) {
@@ -74,17 +80,4 @@ window.ethereum.on("accountsChanged", async (accounts) => {
     updateWalletDisplay(walletAddress);
 
     console.log("Wallet changed:", walletAddress);
-});
-
-window.ethereum.on("chainChanged", async () => {
-
-    provider = new ethers.BrowserProvider(window.ethereum);
-
-    signer = await provider.getSigner();
-
-    walletAddress = await signer.getAddress();
-
-    updateWalletDisplay(walletAddress);
-
-    console.log("Network changed");
 });

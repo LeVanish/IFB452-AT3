@@ -1,13 +1,9 @@
-import {
-    connectWallet,
-    requestWalletConnection
-} from "./wallet.js";
+// This code is main controller of the front end.
+// It used for handling button clicks and form submissions, connection Ui to contracts and establishing front end logic
 
-import {
-    getOrderContract,
-    getEscrowContract,
-    getDeliveryContract
-} from "./contracts.js";
+import { connectWallet, requestWalletConnection } from "./wallet.js";
+
+import { getOrderContract, getEscrowContract, getDeliveryContract } from "./contracts.js";
 
 const orderStatuses = [
     "Created",
@@ -25,35 +21,28 @@ window.addEventListener("load", async () => {
     await connectWallet();
 });
 
-document.getElementById("connectBtn")
-.addEventListener("click", async () => {
+// Buttons functionality
+document.getElementById("connectBtn").addEventListener("click", async () => {
 
     await requestWalletConnection();
 });
 
-document.getElementById("createOrderBtn")
-.addEventListener("click", async () => {
-
+document.getElementById("createOrderBtn").addEventListener("click", async () => {
     try {
 
         const orderContract = getOrderContract();
 
-        const customer =
-            document.getElementById("customer").value;
+        const customer = document.getElementById("customer").value;
 
-        const supplier =
-            document.getElementById("supplier").value;
+        const supplier = document.getElementById("supplier").value;
 
-        const productName =
-            document.getElementById("productName").value;
+        const productName = document.getElementById("productName").value;
 
-        const quantity =
-            document.getElementById("quantity").value;
+        const quantity = document.getElementById("quantity").value;
 
-        const price =
-            document.getElementById("price").value;
+        const price = document.getElementById("price").value;
 
-        const tx = await orderContract.createOrder(
+        const transaction = await orderContract.createOrder(
             customer,
             supplier,
             productName,
@@ -61,7 +50,7 @@ document.getElementById("createOrderBtn")
             price
         );
 
-        await tx.wait();
+        await transaction.wait();
 
         alert("Order created");
 
@@ -71,26 +60,21 @@ document.getElementById("createOrderBtn")
     }
 });
 
-document.getElementById("assignDeliveryBtn")
-.addEventListener("click", async () => {
-
+document.getElementById("assignDeliveryBtn").addEventListener("click", async () => {
     try {
 
         const orderContract = getOrderContract();
 
-        const orderId =
-            document.getElementById("assignOrderId").value;
+        const orderId = document.getElementById("assignOrderId").value;
 
-        const deliveryProvider =
-            document.getElementById("deliveryProvider").value;
+        const deliveryProvider = document.getElementById("deliveryProvider").value;
 
-        const tx =
-            await orderContract.setDeliveryProvider(
-                orderId,
-                deliveryProvider
-            );
+        const transaction = await orderContract.setDeliveryProvider(
+            orderId,
+            deliveryProvider
+        );
 
-        await tx.wait();
+        await transaction.wait();
 
         alert("Delivery provider assigned");
 
@@ -100,18 +84,26 @@ document.getElementById("assignDeliveryBtn")
     }
 });
 
-document.getElementById("viewOrderBtn")
-.addEventListener("click", async () => {
-
+document.getElementById("viewOrderBtn").addEventListener("click", async () => {
     try {
 
         const orderContract = getOrderContract();
 
-        const orderId =
-            document.getElementById("viewOrderId").value;
+        const orderId = document.getElementById("viewOrderId").value;
 
-        const order =
-            await orderContract.getOrderDetails(orderId);
+        const order = await orderContract.getOrderDetails(orderId);
+
+        const created = new Date(Number(order.createdAt) * 1000).toLocaleString();
+        
+
+        let delivered = "Delivery is not finished";
+
+        if (Number(order.deliveredAt) !== 0) {
+
+            const deliveredDate = new Date(Number(order.deliveredAt) * 1000);
+
+            delivered = deliveredDate.toLocaleString();
+        }
 
         const html = `
             <p>Customer: ${order[0]}</p>
@@ -121,11 +113,12 @@ document.getElementById("viewOrderBtn")
             <p>Product: ${order[4]}</p>
             <p>Quantity: ${order[5]}</p>
             <p>Price: ${order[6].toString()}</p>
+            <p>Created At: ${created}</p>
+            <p>Delivered At: ${delivered}</p>
             <p>Status: ${orderStatuses[Number(order[9])]}</p>
         `;
 
-        document.getElementById("orderDetails")
-            .innerHTML = html;
+        document.getElementById("orderDetails").innerHTML = html;
 
     } catch(err) {
 
@@ -133,31 +126,26 @@ document.getElementById("viewOrderBtn")
     }
 });
 
-document.getElementById("depositBtn")
-.addEventListener("click", async () => {
-
+document.getElementById("depositBtn").addEventListener("click", async () => {
     try {
 
         const orderContract = getOrderContract();
         const escrowContract = getEscrowContract();
 
-        const orderId =
-            document.getElementById("depositOrderId").value;
+        const orderId = document.getElementById("depositOrderId").value;
 
-        const order =
-            await orderContract.getOrderDetails(orderId);
+        const order = await orderContract.getOrderDetails(orderId);
 
         const price = order[6];
 
-        const tx =
-            await escrowContract.depositPayment(
+        const transaction = await escrowContract.depositPayment(
                 orderId,
                 {
                     value: price
                 }
             );
 
-        await tx.wait();
+        await transaction.wait();
 
         alert("Payment deposited");
 
@@ -167,20 +155,16 @@ document.getElementById("depositBtn")
     }
 });
 
-document.getElementById("confirmDeliveryBtn")
-.addEventListener("click", async () => {
-
+document.getElementById("confirmDeliveryBtn").addEventListener("click", async () => {
     try {
 
         const escrowContract = getEscrowContract();
 
-        const orderId =
-            document.getElementById("depositOrderId").value;
+        const orderId = document.getElementById("depositOrderId").value;
 
-        const tx =
-            await escrowContract.confirmDelivery(orderId);
+        const transaction = await escrowContract.confirmDelivery(orderId);
 
-        await tx.wait();
+        await transaction.wait();
 
         alert("Delivery confirmed");
 
@@ -190,20 +174,16 @@ document.getElementById("confirmDeliveryBtn")
     }
 });
 
-document.getElementById("releaseFundsBtn")
-.addEventListener("click", async () => {
-
+document.getElementById("releaseFundsBtn").addEventListener("click", async () => {
     try {
 
         const escrowContract = getEscrowContract();
 
-        const orderId =
-            document.getElementById("depositOrderId").value;
+        const orderId = document.getElementById("depositOrderId").value;
 
-        const tx =
-            await escrowContract.releaseFunds(orderId);
+        const transaction = await escrowContract.releaseFunds(orderId);
 
-        await tx.wait();
+        await transaction.wait();
 
         alert("Funds released");
 
@@ -213,20 +193,16 @@ document.getElementById("releaseFundsBtn")
     }
 });
 
-document.getElementById("refundBtn")
-.addEventListener("click", async () => {
-
+document.getElementById("refundBtn").addEventListener("click", async () => {
     try {
 
         const escrowContract = getEscrowContract();
 
-        const orderId =
-            document.getElementById("depositOrderId").value;
+        const orderId = document.getElementById("depositOrderId").value;
 
-        const tx =
-            await escrowContract.refund(orderId);
+        const transaction = await escrowContract.refund(orderId);
 
-        await tx.wait();
+        await transaction.wait();
 
         alert("Refund successful");
 
@@ -236,21 +212,16 @@ document.getElementById("refundBtn")
     }
 });
 
-document.getElementById("shippedBtn")
-.addEventListener("click", async () => {
-
+document.getElementById("shippedBtn").addEventListener("click", async () => {
     try {
 
-        const deliveryContract =
-            getDeliveryContract();
+        const deliveryContract = getDeliveryContract();
 
-        const orderId =
-            document.getElementById("deliveryOrderId").value;
+        const orderId = document.getElementById("deliveryOrderId").value;
 
-        const tx =
-            await deliveryContract.markAsShipped(orderId);
+        const transaction = await deliveryContract.markAsShipped(orderId);
 
-        await tx.wait();
+        await transaction.wait();
 
         alert("Marked as shipped");
 
@@ -260,21 +231,16 @@ document.getElementById("shippedBtn")
     }
 });
 
-document.getElementById("transitBtn")
-.addEventListener("click", async () => {
-
+document.getElementById("transitBtn").addEventListener("click", async () => {
     try {
 
-        const deliveryContract =
-            getDeliveryContract();
+        const deliveryContract = getDeliveryContract();
 
-        const orderId =
-            document.getElementById("deliveryOrderId").value;
+        const orderId = document.getElementById("deliveryOrderId").value;
 
-        const tx =
-            await deliveryContract.markAsInTransit(orderId);
+        const transaction = await deliveryContract.markAsInTransit(orderId);
 
-        await tx.wait();
+        await transaction.wait();
 
         alert("Marked as in transit");
 
@@ -284,21 +250,16 @@ document.getElementById("transitBtn")
     }
 });
 
-document.getElementById("deliveredBtn")
-.addEventListener("click", async () => {
-
+document.getElementById("deliveredBtn").addEventListener("click", async () => {
     try {
 
-        const deliveryContract =
-            getDeliveryContract();
+        const deliveryContract = getDeliveryContract();
 
-        const orderId =
-            document.getElementById("deliveryOrderId").value;
+        const orderId = document.getElementById("deliveryOrderId").value;
 
-        const tx =
-            await deliveryContract.markAsDelivered(orderId);
+        const transaction = await deliveryContract.markAsDelivered(orderId);
 
-        await tx.wait();
+        await transaction.wait();
 
         alert("Marked as delivered");
 
@@ -308,11 +269,9 @@ document.getElementById("deliveredBtn")
     }
 });
 
-document.getElementById("failOrderBtn")
-.addEventListener("click", async () => {
+document.getElementById("failOrderBtn").addEventListener("click", async () => {
 
-    const confirmed =
-        confirm("Are you sure you want to fail this order?");
+    const confirmed = confirm("Are you sure you want to fail this order?");
 
     if (!confirmed) {
         return;
@@ -322,13 +281,11 @@ document.getElementById("failOrderBtn")
 
         const orderContract = getOrderContract();
 
-        const orderId =
-            document.getElementById("failOrderId").value;
+        const orderId = document.getElementById("failOrderId").value;
 
-        const tx =
-            await orderContract.markAsFailed(orderId);
+        const transaction = await orderContract.markAsFailed(orderId);
 
-        await tx.wait();
+        await transaction.wait();
 
         alert("Order marked as failed");
 
