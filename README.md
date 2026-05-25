@@ -1,18 +1,18 @@
 # Delivery Escrow dApp
 
-## IFB452 AT3 Blackhain Project
+### IFB452 AT3 Blackhain Project
 
-### Team 106:
+#### Team 106:
 - Ivan Ostapenko (n11421860)
 - Arjun Ramesh Nair (n11530405)
 
-#### Application purpose
+##### Application purpose
 - Securely store order payment in an escrow
 - Release or refund the deposit when certain conditions are fulfilled
 - Store and update order status, including delivery shipment status
 
 
-### Application deployment guide
+## Application deployment guide
 Server deployment
 - Change directory to "/IFB452-AT3/frontend"
 - In terminal, enter "npm install"
