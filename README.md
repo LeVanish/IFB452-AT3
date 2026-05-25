@@ -12,6 +12,7 @@
 - Store and update order status, including delivery shipment status
 
 ##### Application structure
+```
 IFB452-AT3
 ├── contracts/
 │   ├── delivery.sol
@@ -33,6 +34,7 @@ IFB452-AT3
 │   ├── package-lock.json
 │   └── package.json
 └── README.md
+```
 
 ## Application deployment guide
 Server deployment
