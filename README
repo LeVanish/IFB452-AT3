@@ -18,4 +18,4 @@ Server deployment
 - In terminal, enter "npm install"
 - In terminal, enter "npm serve"
 
-The local server should be running on "http://localhost:3000"s
+The local server should be running on "http://localhost:3000"
