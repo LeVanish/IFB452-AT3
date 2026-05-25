@@ -311,7 +311,7 @@ contract OrderContract {
             o.status != OrderStatus.Delivered &&
             o.status != OrderStatus.Completed &&
             o.status != OrderStatus.Refunded,
-            "Order status must be Delivered, Completed or Refunded"
+            "Order status must not be Delivered, Completed or Refunded"
         );
 
         o.status = OrderStatus.Failed;
