@@ -16,17 +16,18 @@ const orderStatuses = [
     "Refunded"
 ];
 
-
+// =========================================== Wallet actions ===========================================
 window.addEventListener("load", async () => {
     await connectWallet();
 });
 
-// Buttons functionality
+
 document.getElementById("connectBtn").addEventListener("click", async () => {
 
     await requestWalletConnection();
 });
 
+// =========================================== Order actions ===========================================
 document.getElementById("createOrderBtn").addEventListener("click", async () => {
     try {
 
@@ -84,6 +85,48 @@ document.getElementById("assignDeliveryBtn").addEventListener("click", async () 
     }
 });
 
+document.getElementById("loadOrdersBtn").addEventListener("click", async () => {
+        try {
+
+            const contract = getOrderContract();
+
+            const count = Number(await contract.orderCount());
+
+            if (count === 0) {
+
+                container.innerHTML = "No orders exist";
+                return;
+            }
+
+            let html = "";
+
+            for (let i = 1; i <= count; i++) {
+
+                const order = await contract.getOrderDetails(i);
+
+                html += `
+                    <div class="order-card">
+
+                        <strong>Order #${i}</strong>
+                        <br>
+
+                        Product: ${order.productName}
+                        <br>
+
+                        Status: ${orderStatuses[order.status]}
+                    </div>
+                    <br>
+                `;
+            }
+
+            document.getElementById("ordersList").innerHTML = html;
+
+        } catch(error) {
+
+            alert(error.reason || error.message);
+        }
+    });
+
 document.getElementById("viewOrderBtn").addEventListener("click", async () => {
     try {
 
@@ -92,6 +135,14 @@ document.getElementById("viewOrderBtn").addEventListener("click", async () => {
         const orderId = document.getElementById("viewOrderId").value;
 
         const order = await orderContract.getOrderDetails(orderId);
+
+        let deliveryProviderData = "No delivery provider assigned";
+
+        if (order.deliveryProvider !== "0x0000000000000000000000000000000000000000") {
+
+            deliveryProviderData = order.deliveryProvider;
+        }
+
 
         const created = new Date(Number(order.createdAt) * 1000).toLocaleString();
         
@@ -109,7 +160,7 @@ document.getElementById("viewOrderBtn").addEventListener("click", async () => {
             <p>Customer: ${order[0]}</p>
             <p>Retailer: ${order[1]}</p>
             <p>Supplier: ${order[2]}</p>
-            <p>Delivery Provider: ${order[3]}</p>
+            <p>Delivery Provider: ${deliveryProviderData}</p>
             <p>Product: ${order[4]}</p>
             <p>Quantity: ${order[5]}</p>
             <p>Price: ${order[6].toString()}</p>
@@ -126,6 +177,7 @@ document.getElementById("viewOrderBtn").addEventListener("click", async () => {
     }
 });
 
+// =========================================== Escrow Actions ===========================================
 document.getElementById("depositBtn").addEventListener("click", async () => {
     try {
 
@@ -212,6 +264,7 @@ document.getElementById("refundBtn").addEventListener("click", async () => {
     }
 });
 
+// =========================================== Delivery actions ===========================================
 document.getElementById("shippedBtn").addEventListener("click", async () => {
     try {
 
@@ -269,6 +322,7 @@ document.getElementById("deliveredBtn").addEventListener("click", async () => {
     }
 });
 
+// Order Fail action
 document.getElementById("failOrderBtn").addEventListener("click", async () => {
 
     const confirmed = confirm("Are you sure you want to fail this order?");
