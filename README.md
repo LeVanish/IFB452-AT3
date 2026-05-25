@@ -40,6 +40,6 @@ IFB452-AT3
 Server deployment
 - Change directory to "/IFB452-AT3/frontend"
 - In terminal, enter "npm install"
-- In terminal, enter "npm serve"
+- In terminal, enter "npx serve"
 
 The local server should be running on "http://localhost:3000"
