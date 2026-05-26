@@ -105,6 +105,7 @@ document.getElementById("loadOrdersBtn").addEventListener("click", async () => {
                 const order = await contract.getOrderDetails(i);
 
                 html += `
+                    <br>
                     <div class="order-card">
 
                         <strong>Order #${i}</strong>
@@ -115,7 +116,6 @@ document.getElementById("loadOrdersBtn").addEventListener("click", async () => {
 
                         Status: ${orderStatuses[order.status]}
                     </div>
-                    <br>
                 `;
             }
 
