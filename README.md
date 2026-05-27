@@ -37,8 +37,17 @@ IFB452-AT3
 ```
 
 ## Application deployment guide
+Contract deployment
+Currently used contracts are already deployed on the Sepolia testnet. If you want to deploy the contracts yourself:
+- Deploy OrderContract
+- Using OrderContract address, deploy EscrowContract and DeliveryContract
+- Use EscrowContract and DeliveryContract addresses, set them using respective functions in OrderContract
+- The contracts should be connected and able to interact with each other
+- Change contract addresses in contracts.js to newly deployed contract addresses
+
 Server deployment
-- Change directory to "/IFB452-AT3/frontend"
+- Node.js should be installed. Node can be installed at https://nodejs.org/en/download 
+- Change current directory to "/IFB452-AT3/frontend"
 - In terminal, enter "npx serve"
 
 The local server should be running on "http://localhost:3000"
